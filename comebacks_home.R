@@ -11,7 +11,7 @@ library(ggiraph)
 #Who won
 
 years <- c(seq(2000,2019),2021)
-years <- c(seq(2000,2013),seq(2015,2019),2021)
+years <- c(seq(2000,2014),seq(2015,2019),2021)
 
 
 
@@ -22,6 +22,12 @@ files <- paste0("retr_game_",years,".RDS")
 retr <- files %>%  map_dfr( readRDS)
 
 setwd("~/Sports/baseball")
+
+
+
+retr <- retr %>% filter( is.na(Completion)) %>%
+  filter(NumOuts > 50)
+
 
 
 retr <- retr %>%   mutate(winner =ifelse(VisRuns > HmRuns, "Vis","Hm" )) %>%

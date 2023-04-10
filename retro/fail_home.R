@@ -8,7 +8,7 @@ library(RColorBrewer)
 
 library(ggiraph)
 
-#Who won
+
 
 years <- c(seq(2000,2019),2021)
 years <- c(seq(2000,2013),seq(2015,2019),2021)
@@ -23,11 +23,22 @@ retr <- files %>%  map_dfr( readRDS)
 setwd("~/Sports/baseball")
 
 
+#Remove shortened and delayed games
+
+
+retr <- retr %>% filter( is.na(Completion)) %>%
+           filter(NumOuts > 50)
+
+
+
+#Who won
 
 retr <- retr %>%   mutate(winner =ifelse(VisRuns > HmRuns, "Vis","Hm" )) %>%
                     rownames_to_column(var = "gameId") %>%  
                     select(gameId,winner,HmLine,VisLine)
     
+
+
 
 retr <-  retr %>%   mutate( HMi1 =  as.numeric(  map_chr(HmLine, ~ str_split(.,"")[[1]][1])),   
                         HMi2  = as.numeric(  map_chr(HmLine, ~ str_split(.,"")[[1]][2])),
